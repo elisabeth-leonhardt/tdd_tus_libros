@@ -1,12 +1,27 @@
-package source 
+package source
 
-import (
-	"fmt"
-)
+import "fmt"
 
 type Cart struct {
-	quant int
-}  
+	Id string
+	Books []Book
+}
+
+type Book struct {
+	ISBN string
+	Author string
+	Title string
+}
+
+func(c *Cart) GetCart() []Book {
+	return c.Books
+}
+
+func(c *Cart) AddBook(aBook Book) {
+	c.Books = append(c.Books, aBook)
+	fmt.Print(c.Books)
+}
+
 
 // 1. primer carrito que agarro está vacío
 // 2. agregar un libro y los contiene
