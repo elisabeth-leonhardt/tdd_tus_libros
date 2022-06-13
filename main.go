@@ -8,6 +8,4 @@ import (
 func main() {
 	aCart := source.Cart{}
 	fmt.Print(aCart)
-	aCart.AddBook("titulo de un libro")
-	fmt.Print(aCart)
 }

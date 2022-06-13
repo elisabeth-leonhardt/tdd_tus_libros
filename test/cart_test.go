@@ -4,39 +4,86 @@ import (
 	"TusLibros/source"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 )
 
 type CartTestSuite struct {
-    suite.Suite
+	suite.Suite
 }
 
-func (suite *CartTestSuite) TestExample001() {
-    aCart := source.Cart{}
-    suite.Equal(len(aCart.GetCart()), 0)
+//carrito esta vacio
+func (suite *CartTestSuite) Test001() {
+    aCart := suite.emptyCart()
+	cantCart := len(aCart.Books)
+	suite.Equal(0, cantCart)
 }
 
+//agregar un libro y este lo contiene
 func (suite *CartTestSuite) Test002() {
-    aCart := source.Cart{}
-    aBook := source.Book{Author: "Cal Newport", Title: "Deep Work", ISBN: "123"}
-    aCart.AddBook(aBook)
-    suite.Equal(len(aCart.GetCart()), 1)
+    aCart := suite.emptyCart()
+    aBook := suite.validBook()
+	aCart.AddObjectToCart(aBook, 1)
+	cantCart := len(aCart.Books)
+	suite.Equal(1, cantCart)
 }
 
-// this works!!
-func Test001(t *testing.T) {
-    aCart := source.Cart{}
-	assert.Equal(t, 0, len(aCart.GetCart()));
+//agregar varios libros y este lo contiene
+func (suite *CartTestSuite) Test003() {
+    aCart := suite.emptyCart()
+    aBook := suite.validBook()
+    anotherBook := suite.validBook()
+    aCart.AddObjectToCart(aBook, 1)
+    aCart.AddObjectToCart(anotherBook, 1)
+	cantCart := len(aCart.Books)
+	suite.Equal(2, cantCart)
 }
 
-func Test002(t *testing.T) {
-    aCart := source.Cart{}
-    aBook := source.Book{Author: "Cal Newport", Title: "Deep Work", ISBN: "123"}
-    aCart.AddBook(aBook)
-	assert.Equal(t, 1, len(aCart.GetCart()));
+
+
+
+
+
+func (suite *CartTestSuite) Test004() {
+    aCart := suite.emptyCart()
+    aBook := suite.validBook()
+    aCart.AddObjectToCart(aBook, 3)
+	cantCart := len(aCart.Books)
+	suite.Equal(3, cantCart)
 }
 
-func RunCartTestSuite(t *testing.T) {
-    suite.Run(t, new(CartTestSuite))
+func (suite *CartTestSuite) Test005() {
+    aCart := suite.emptyCart()
+    aBook := suite.validBook()
+    err := aCart.AddObjectToCart(aBook, 0)
+	cantCart := len(aCart.Books)
+    suite.Equal(0, cantCart)
+    suite.Equal(err, source.Error01)
+}
+
+// listar los libros
+func (suite *CartTestSuite) Test006() {
+    aCart := suite.emptyCart()
+    aBook := suite.validBook()
+    anotherBook := suite.validBook()
+    aCart.AddObjectToCart(aBook, 1)
+    aCart.AddObjectToCart(anotherBook, 1)
+    cartContent, _ := aCart.ListCartContent()
+    var message = "{}"
+    suite.Equal(message, cartContent)
+
+}
+
+
+// Factory Methods
+func (*CartTestSuite) validBook() (source.Book) {
+	return source.Book{ISBN: "validBook"}
+}
+
+func (*CartTestSuite) emptyCart() (source.Cart) {
+	return source.NewCart()
+}
+
+//Esta funcion tiene que comenzar con Test
+func TestRunCartSuite(t *testing.T) {
+	suite.Run(t, new(CartTestSuite))
 }
