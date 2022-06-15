@@ -8,26 +8,31 @@ import (
 
 type CartTestSuite struct {
 	suite.Suite
+	factory Factory
+}
+
+func (suite *CartTestSuite) SetupTest() {
+	suite.factory = NewFactory()
 }
 
 func (suite *CartTestSuite) TestNewCartIsEmpty() {
-	aCart := EmptyCart()
+	aCart := suite.factory.EmptyCart()
 	cantCart := len(aCart.Books)
 	suite.Equal(0, cantCart)
 }
 
 func (suite *CartTestSuite) TestAddBookAndCartContainslt() {
-	aCart := EmptyCart()
-	aBook := ValidBook()
+	aCart := suite.factory.EmptyCart()
+	aBook := suite.factory.ValidBook()
 	aCart.AddObjectToCart(aBook, 1)
 	cantCart := len(aCart.Books)
 	suite.Equal(1, cantCart)
 }
 
 func (suite *CartTestSuite) TestAddTwoBooksAndCartContainsThem() {
-	aCart := EmptyCart()
-	aBook := ValidBook()
-	anotherBook := ValidBook()
+	aCart := suite.factory.EmptyCart()
+	aBook := suite.factory.ValidBook()
+	anotherBook := suite.factory.ValidBook()
 	aCart.AddObjectToCart(aBook, 1)
 	aCart.AddObjectToCart(anotherBook, 1)
 	cantCart := len(aCart.Books)
@@ -35,16 +40,16 @@ func (suite *CartTestSuite) TestAddTwoBooksAndCartContainsThem() {
 }
 
 func (suite *CartTestSuite) TestAddTwoDifferentBooksAndCartContainsThem() {
-	aCart := EmptyCart()
-	aBook := ValidBook()
+	aCart := suite.factory.EmptyCart()
+	aBook := suite.factory.ValidBook()
 	aCart.AddObjectToCart(aBook, 3)
 	cantCart := len(aCart.Books)
 	suite.Equal(3, cantCart)
 }
 
 func (suite *CartTestSuite) TestCannotAdd0Books() {
-	aCart := EmptyCart()
-	aBook := ValidBook()
+	aCart := suite.factory.EmptyCart()
+	aBook := suite.factory.ValidBook()
 	err := aCart.AddObjectToCart(aBook, 0)
 	cantCart := len(aCart.Books)
 	suite.Equal(0, cantCart)
@@ -52,9 +57,9 @@ func (suite *CartTestSuite) TestCannotAdd0Books() {
 }
 
 func (suite *CartTestSuite) TestListBooksInCart() {
-	aCart := EmptyCart()
-	aBook := ValidBook()
-	anotherBook := ValidBook()
+	aCart := suite.factory.EmptyCart()
+	aBook := suite.factory.ValidBook()
+	anotherBook := suite.factory.ValidBook()
 	aCart.AddObjectToCart(aBook, 1)
 	aCart.AddObjectToCart(anotherBook, 1)
 	cartContent, _ := aCart.ListCartContent()
@@ -63,15 +68,15 @@ func (suite *CartTestSuite) TestListBooksInCart() {
 }
 
 func (suite *CartTestSuite) TestVerifyThatCatalogueContainsBook() {
-	aCart := EmptyCart()
-	aBookValid := ValidBook()
+	aCart := suite.factory.EmptyCart()
+	aBookValid := suite.factory.ValidBook()
 	err := aCart.AddObjectToCart(aBookValid, 1)
 	suite.Equal(nil, err)
 }
 
 func (suite *CartTestSuite) TestVerifyThatCatalogueNotContainsBook() {
-	aCart := EmptyCart()
-	aBookNoValid := InvalidBook()
+	aCart := suite.factory.EmptyCart()
+	aBookNoValid := suite.factory.InvalidBook()
 	err := aCart.AddObjectToCart(aBookNoValid, 1)
 	suite.Equal(source.Error02, err)
 }
