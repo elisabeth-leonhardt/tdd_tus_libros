@@ -17,19 +17,13 @@ type Book struct {
 var Error01 = errors.New("cannot receive 1 items")
 var Error02 = errors.New("book is not part of catalogue")
 
-// 1. primer carrito que agarro está vacío
-// 2. agregar un libro y los contiene
-// 3. agregar varios libros y los contiene
-// 4. agregar 3x el mismo libro y los contiene
-// 5. quiero agregar 0 o menos libros y no se puede (tira error)
-
 func NewCart(catalogueBooks []Book) Cart {
 	newCart := Cart{Books: []Book{}, Catalogue: catalogueBooks}
 	return newCart
 }
 
 func (c *Cart) AddObjectToCart(aBook Book, numberOfCopies int) (err error) {
-	if numberOfCopies == 0 {
+	if numberOfCopies <= 0 {
 		return Error01
 	}
 
