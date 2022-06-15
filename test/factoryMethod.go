@@ -5,8 +5,6 @@ import (
 	"time"
 )
 
-//definir como metodos
-
 type Factory struct {
 }
 
@@ -16,7 +14,7 @@ func NewFactory() Factory {
 
 // Factory Methods
 func (f *Factory) ValidBook() source.Book {
-	return source.Book{ISBN: "ValidBook"}
+	return source.Book{ISBN: "ValidBook", Price: 10.00}
 }
 
 func (f *Factory) InvalidBook() source.Book {
@@ -29,8 +27,16 @@ func (f *Factory) EmptyCart() source.Cart {
 	return source.NewCart(booksCatalogue)
 }
 
-func (f *Factory) FullCart() source.Cart {
-	bookValid := source.Book{ISBN: "ValidBook"}
+func (f *Factory) FullCartWithThreeBooks() source.Cart {
+	bookValid := source.Book{ISBN: "ValidBook", Price: 10.00}
+	booksCatalogue := []source.Book{bookValid}
+	cart := source.NewCart(booksCatalogue)
+	cart.AddObjectToCart(bookValid, 3)
+	return cart
+}
+
+func (f *Factory) FullCartWithOneBook() source.Cart {
+	bookValid := source.Book{ISBN: "ValidBook", Price: 10.00}
 	booksCatalogue := []source.Book{bookValid}
 	cart := source.NewCart(booksCatalogue)
 	cart.AddObjectToCart(bookValid, 1)
@@ -72,4 +78,20 @@ func (f *Factory) ExpiredCard() source.Card {
 
 func (f *Factory) Cashier() source.Cashier {
 	return source.Cashier{}
+}
+
+func (f *Factory) NewSuccessMerchantProcessor() source.MerchantProcessorStub {
+	return source.MerchantProcessorStub{
+		DebitBehavior: func(anAmount float64, aCreditCard source.Card) error {
+			return nil
+		},
+	}
+}
+
+func (f *Factory) NewFailMerchantProcessor() source.MerchantProcessorStub {
+	return source.MerchantProcessorStub{
+		DebitBehavior: func(anAmount float64, aCreditCard source.Card) error {
+			return source.Error06
+		},
+	}
 }

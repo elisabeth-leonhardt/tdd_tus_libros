@@ -11,7 +11,8 @@ type Cart struct {
 }
 
 type Book struct {
-	ISBN string `json:"isbn"`
+	ISBN  string `json:"isbn"`
+	Price float64
 }
 
 var Error01 = errors.New("cannot receive 1 items")

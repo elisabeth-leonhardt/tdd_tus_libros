@@ -18,7 +18,7 @@ type Card struct {
 	Name       *string
 }
 
-func (c *Cashier) Checkout(aCart Cart, aCard Card) (total float64, err error) {
+func (c *Cashier) Checkout(aCart Cart, aCard Card, merchant MerchantProcessorStub) (total float64, err error) {
 	if len(aCart.Books) <= 0 {
 		return 0, Error03
 	}
@@ -31,5 +31,11 @@ func (c *Cashier) Checkout(aCart Cart, aCard Card) (total float64, err error) {
 		return 0, Error05
 	}
 
-	return 1.00, nil
+	for _, b := range aCart.Books {
+		total = total + b.Price
+	}
+
+	err = merchant.ProcessPayment(aCard, total)
+
+	return total, err
 }
